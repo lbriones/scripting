@@ -1,0 +1,56 @@
+#install ruby 2.1.2p95 (2014-05-08 revision 45877) [x86_64-linux]
+#install rails 4.1.5
+
+sudo apt-get update
+sudo apt-get install git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev python-software-properties
+sudo apt-get install libgdbm-dev libncurses5-dev automake libtool bison libffi-dev
+curl -L https://get.rvm.io | bash -s stable
+source ~/.rvm/scripts/rvm
+echo "source ~/.rvm/scripts/rvm" >> ~/.bashrc
+rvm install 2.1.2
+rvm use 2.1.2 --default
+ruby -v
+echo "gem: --no-ri --no-rdoc" > ~/.gemrc
+
+#install conf git 
+git config --global color.ui true
+git config --global user.name "Luis Briones"
+git config --global user.email "lbriones.tic@gmail.com"
+ssh-keygen -t rsa -C "lbriones.tic@gmail.com"
+#The next step is to take the newly generated SSH key and add it to your Github account. You want to copy and paste the output of the following command and paste it here.
+cat ~/.ssh/id_rsa.pub
+ssh -T git@github.com
+Hi You've successfully authenticated, but GitHub does not provide shell access.
+
+sudo add-apt-repository ppa:chris-lea/node.js
+sudo apt-get update
+sudo apt-get install nodejs
+
+gem install rails
+
+#install mysql
+sudo apt-get install mysql-server mysql-client libmysqlclient-dev
+
+#demo rails app
+#### If you want to use SQLite (not recommended)
+rails new myapp
+
+#### If you want to use MySQL
+rails new myapp -d mysql
+
+#### If you want to use Postgres
+# Note that this will expect a postgres user with the same username
+# as your app, you may need to edit config/database.yml to match the
+# user you created earlier
+rails new myapp -d postgresql
+
+# Move into the application directory
+cd myapp
+
+# If you setup MySQL or Postgres with a username/password, modify the
+# config/database.yml file to contain the username/password that you specified
+
+# Create the database
+rake db:create
+
+rails server
