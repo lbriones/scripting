@@ -1,0 +1,25 @@
+Dependencies:
+-PostgreSQL
+-PIP
+
+Install:
+git clone https://github.com/torchbox/wagtaildemo.git
+cd wagtaildemo
+pip install -r requirements/dev.txt
+createdb -Upostgres wagtaildemo
+./manage.py syncdb
+./manage.py migrate
+./manage.py createsuperuser
+./manage.py runserver
+
+How to Fix PostgreSQL:
+Step 1: edit pg_hba.conf file
+# sudo vi /etc/postgresql/9.3/main/pg_hba.conf
+Step 2 : change ” peer ” to pcDuino Ubuntu user , such as ” root “
+# Database administrative login by Unix domain socket
+local   all             postgres                                peer
+Change to :
+# Database administrative login by Unix domain socket
+local   all             postgres                                trust
+Step 3: save ” pg_hba.conf “file and reload PostgreSQL service
+# sudo /etc/init.d/postgresql reload
