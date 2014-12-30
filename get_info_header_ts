@@ -1,0 +1,45 @@
+#!/usr/bin/env python
+import os
+import sys
+import time
+import MySQLdb #apt-get install python-mysqldbimport time
+import urlparse
+import threading
+import urllib2
+
+#--------------------------------------
+ip = [ips]
+URL_play="http://url.m3u8"
+ 
+def main():
+	conn 		= urllib2.urlopen(URL_play)
+	manifest 	= conn.read()
+	playurl 	= urlparse.urlparse(URL_play)
+	mybaseurl 	= os.path.dirname(playurl.path)
+	subdir 		= mybaseurl.split("/")[-1]
+	domain 		= playurl.scheme+'://'+playurl.netloc	
+	count 		= 0
+	log 		= []
+
+	for line in manifest.split("\n"):
+		line = line.strip()
+		if not line.startswith("#EXTM3U") and not line.startswith("#EXT-X-"):
+			if not line.startswith("#"):
+				fragmentname = os.path.join(mybaseurl, line.split("/")[-1])
+				tsplay_url = (domain+''+fragmentname)
+				if '.ts' in tsplay_url:
+					for i in range(len(ip)):
+						#ultimo_ts           = 'http://'+ip[i]+fragmentname
+						ultimo_ts           = 'http://'+ip[i]+'/path.ts'
+						headers             = {'Host' : 'domain'}
+						ts_flash            = urllib2.Request(ultimo_ts, None, headers)
+						hit_counter_header  = urllib2.urlopen(ts_flash, None, timeout = 4)
+						hit_counter         = hit_counter_header.headers.getheader("X-Cache-Hits")
+						hit_counter_bytes   = hit_counter_header.headers.getheader("Content-Length")
+						age 				= hit_counter_header.headers.getheader("Age")
+						varnish				= hit_counter_header.headers.getheader("X-Served-By")
+						domains				= hit_counter_header.headers.getheader("X-Domain")
+						print ultimo_ts, hit_counter, hit_counter_bytes, age, varnish, domains
+
+if __name__ == "__main__":
+	main()
