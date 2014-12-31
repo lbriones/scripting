@@ -21,6 +21,10 @@ configuration   : ws.conf
 
 #process vodstats.sh
 ws.py vodstats /path/11-12-2014-16:40:12.json.gz
+{
+"user": "pass",
+"host": "ip"
+}
 
 ---------------------------------------
 """
